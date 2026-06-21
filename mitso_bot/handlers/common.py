@@ -204,7 +204,8 @@ async def handle_photo(msg: Message):
     file_id = msg.photo[-1].file_id
     caption = msg.caption or ""
     await save_proof_photo(user["student_id"], file_id, caption)
-    await msg.answer("✅ Справка сохранена. Администратор её проверит.")    role = user["role"]
+    await msg.answer("✅ Справка сохранена. Администратор её проверит.")   
+  role = user["role"]
     name = msg.from_user.first_name or "студент"
 
     if role in ("admin", "superadmin"):
