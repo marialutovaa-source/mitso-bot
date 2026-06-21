@@ -55,48 +55,6 @@ async def init_db():
                 created_at     TIMESTAMPTZ DEFAULT NOW()
             )
         """)
-        # Добавляем колонки если таблица уже существовала
-        await conn.execute("""
-            ALTER TABLE absences ADD COLUMN IF NOT EXISTS lesson_num  INTEGER
-        """)
-        await conn.execute("""
-            ALTER TABLE absences ADD COLUMN IF NOT EXISTS lesson_time TEXT
-        """)
-        await conn.execute("""
-            CREATE TABLE IF NOT EXISTS proof_photos (
-                id          SERIAL PRIMARY KEY,
-                student_id  INTEGER NOT NULL REFERENCES students(id) ON DELETE CASCADE,
-                file_id     TEXT NOT NULL,
-                caption     TEXT,
-                sent_at     TIMESTAMPTZ DEFAULT NOW()
-            )
-        """)
-        await conn.execute("""
-            CREATE INDEX IF NOT EXISTS absences_student_idx    ON absences(student_id);
-            CREATE INDEX IF NOT EXISTS absences_discipline_idx ON absences(discipline_id);
-            CREATE INDEX IF NOT EXISTS absences_date_idx       ON absences(date);
-        """)        """)
-        await conn.execute("""
-            CREATE TABLE IF NOT EXISTS disciplines (
-                id    SERIAL PRIMARY KEY,
-                name  TEXT NOT NULL UNIQUE
-            )
-        """)
-        await conn.execute("""
-            CREATE TABLE IF NOT EXISTS absences (
-                id             SERIAL PRIMARY KEY,
-                student_id     INTEGER NOT NULL REFERENCES students(id) ON DELETE CASCADE,
-                discipline_id  INTEGER NOT NULL REFERENCES disciplines(id) ON DELETE CASCADE,
-                date           DATE NOT NULL,
-                hours          INTEGER NOT NULL DEFAULT 2,
-                lesson_num     INTEGER,
-                lesson_time    TEXT,
-                reason         TEXT,
-                confirmed      BOOLEAN DEFAULT FALSE,
-                created_at     TIMESTAMPTZ DEFAULT NOW()
-            )
-        """)
-        # Добавляем колонки если таблица уже существовала
         await conn.execute("""
             ALTER TABLE absences ADD COLUMN IF NOT EXISTS lesson_num  INTEGER
         """)
