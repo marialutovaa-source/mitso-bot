@@ -7,8 +7,8 @@ from config import BOT_TOKEN, SUPER_ADMIN_IDS
 from db.models import init_db
 from db.queries import set_user_role
 from handlers.common  import router as common_router
-from handlers.admin   import router as admin_router
 from handlers.starost import router as starost_router
+from handlers.admin   import router as admin_router
 
 logging.basicConfig(
     level=logging.INFO,
@@ -21,8 +21,8 @@ async def main():
     dp  = Dispatcher(storage=MemoryStorage())
 
     dp.include_router(common_router)
+    dp.include_router(starost_router)  # раньше admin — FSM перехватывает student: колбэки
     dp.include_router(admin_router)
-    dp.include_router(starost_router)
 
     logger.info("Инициализация базы данных...")
     await init_db()
