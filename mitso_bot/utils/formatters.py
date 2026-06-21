@@ -69,25 +69,4 @@ def semester_dates() -> tuple:
 def month_dates() -> tuple:
     today    = date.today()
     last_day = calendar.monthrange(today.year, today.month)[1]
-    return date(today.year, today.month, 1), date(today.year, today.month, last_day)    if not students:
-        return "Список студентов пуст."
-    lines = ["👥 *Список студентов:*\n"]
-    for i, s in enumerate(students, 1):
-        linked = "✅" if s.get("tg_id") else "⬜"
-        lines.append(f"{i}. {linked} {s['last_name']} {s['first_name']}")
-    return "\n".join(lines)
-
-
-def semester_dates() -> tuple:
-    today = date.today()
-    if today.month >= 9:
-        return date(today.year, 9, 1), date(today.year, 12, 31)
-    else:
-        return date(today.year, 1, 1), date(today.year, 6, 30)
-
-
-def month_dates() -> tuple:
-    today = date.today()
-    import calendar
-    last_day = calendar.monthrange(today.year, today.month)[1]
     return date(today.year, today.month, 1), date(today.year, today.month, last_day)
