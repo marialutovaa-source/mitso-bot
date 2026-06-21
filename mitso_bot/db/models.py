@@ -15,6 +15,16 @@ async def init_db():
     pool = await get_pool()
     async with pool.acquire() as conn:
         await conn.execute("""
+            CREATE TABLE IF NOT EXISTS students (
+                id           SERIAL PRIMARY KEY,
+                last_name    TEXT NOT NULL,
+                first_name   TEXT NOT NULL,
+                created_at   TIMESTAMPTZ DEFAULT NOW(),
+                UNIQUE(last_name, first_name)
+            )
+        """)
+
+        await conn.execute("""
             CREATE TABLE IF NOT EXISTS users (
                 tg_id        BIGINT PRIMARY KEY,
                 role         TEXT NOT NULL DEFAULT 'student',
@@ -24,13 +34,8 @@ async def init_db():
         """)
 
         await conn.execute("""
-            CREATE TABLE IF NOT EXISTS students (
-                id           SERIAL PRIMARY KEY,
-                last_name    TEXT NOT NULL,
-                first_name   TEXT NOT NULL,
-                tg_id        BIGINT UNIQUE REFERENCES users(tg_id) ON DELETE SET NULL,
-                created_at   TIMESTAMPTZ DEFAULT NOW()
-            )
+            ALTER TABLE students
+            ADD COLUMN IF NOT EXISTS tg_id BIGINT UNIQUE REFERENCES users(tg_id) ON DELETE SET NULL
         """)
 
         await conn.execute("""
